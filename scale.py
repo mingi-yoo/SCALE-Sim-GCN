@@ -123,7 +123,7 @@ class scale:
         print("SRAM IFMAP: \t" + str(self.isram_min))
         print("SRAM Filter: \t" + str(self.fsram_min))
         print("SRAM OFMAP: \t" + str(self.osram_min))
-        if self.dataflow == 'gcn' || self.dataflow == 'gcn2':
+        if self.dataflow == 'gcn' or self.dataflow == 'gcn2':
             print("SRAM ADJMAP: \t" + str(self.asram_min))
         print("CSV file path: \t" + self.topology_file)
         print("Dataflow: \t" + df_string)
