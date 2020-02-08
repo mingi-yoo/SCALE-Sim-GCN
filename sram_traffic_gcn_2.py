@@ -58,6 +58,7 @@ def sram_traffic(
                     cycle = cycles,
                     dim_rows = dimension_rows,
                     dim_cols = dimension_cols,
+                    num_v_fold = int(num_v_fold),
                     ifmap_w = filt_w,
                     num_nodes = num_nodes, num_edges = num_edges,
                     adjacency_base = adjacency_base, ifmap_base = ifmap_base)
@@ -390,6 +391,7 @@ def gen_relation_trace(
         cycle = 0,
         dim_rows = 4,
         dim_cols = 4,
+        num_v_fold = 3,
         ifmap_w = 5,
         num_nodes = 20, num_edges = 5,
         adjacency_base = 3000000, ifmap_base = 0
