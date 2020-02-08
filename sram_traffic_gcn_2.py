@@ -409,7 +409,7 @@ if __name__ == "__main__":
        dimension_cols = 4,
        ifmap_h = 7, ifmap_w = 5,
        filt_h = 5, filt_w = 5,
-       adjacency_h = 7, adjacency_w = 7,
+       num_nodes = 7, num_edges = 3,
        num_channels = 1,
        num_filt = 1
    )

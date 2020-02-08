@@ -147,15 +147,15 @@ def gen_all_traces(
                                  sram_read_trace_file, data_flow)
     else:
         bw_numbers, detailed_log  = gen_bw_numbers(dram_ifmap_trace_file, dram_filter_trace_file,
-                                     dram_ofmap_trace_file, sram_write_trace_file,
+                                     dram_ofmap_trace_file, "", sram_write_trace_file,
                                      sram_read_trace_file, data_flow)
                                  #array_h, array_w)
 
     return bw_numbers, detailed_log, util, sram_cycles
 
 
-def gen_max_bw_numbers( dram_ifmap_trace_file, dram_filter_trace_file,
-                    dram_ofmap_trace_file, dram_adjacency_trace_file, sram_write_trace_file, sram_read_trace_file, data_flow
+def gen_max_bw_numbers( dram_ifmap_trace_file="", dram_filter_trace_file="",
+                    dram_ofmap_trace_file="", dram_adjacency_trace_file="", sram_write_trace_file="", sram_read_trace_file="", data_flow=""
                     ):
 
     max_dram_activation_bw = 0
@@ -257,9 +257,9 @@ def gen_max_bw_numbers( dram_ifmap_trace_file, dram_filter_trace_file,
     return log
 
 
-def gen_bw_numbers( dram_ifmap_trace_file, dram_filter_trace_file,
-                    dram_ofmap_trace_file, dram_adjacency_trace_file, sram_write_trace_file, 
-                    sram_read_trace_file, data_flow
+def gen_bw_numbers( dram_ifmap_trace_file="", dram_filter_trace_file="",
+                    dram_ofmap_trace_file="", dram_adjacency_trace_file="", sram_write_trace_file="", 
+                    sram_read_trace_file="", data_flow=""
                     #sram_read_trace_file,
                     #array_h, array_w        # These are needed for utilization calculation
                     ):
