@@ -1,3 +1,9 @@
+# What is revised?
+gcn 처리 추가 (sram_traffic_gcn.py)
+
++2020.02.08
+csc, csr 사용시 cycle 계산하는 처리 추가 (sram_traffic_gcn2.py)
+
 # **S**ystolic **C**NN **A**cce**LE**rator Simulator (SCALE Sim)
 
 SCALE sim is a CNN accelerator simulator, that provides cycle-accurate timing,
