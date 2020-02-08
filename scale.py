@@ -81,7 +81,7 @@ class scale:
         self.ofmap_offset = int(ofmap_offset.strip())
 
         # Take care of gcn
-        if self.dataflow == 'gcn':
+        if self.dataflow == 'gcn' || self.dataflow == 'gcn2':
             adjacency_sram = config.get(arch_sec, 'AdjacencySramSz').split(',')
             self.asram_min = adjacency_sram[0].strip()
 
@@ -113,7 +113,7 @@ class scale:
             df_string = "Weight Stationary"
         elif self.dataflow == 'is':
             df_string = "Input Stationary"
-        elif self.dataflow == 'gcn':
+        elif self.dataflow == 'gcn' || self.dataflow == 'gcn2':
             df_string = "Graph Convolution Network"
 
         print("====================================================")
@@ -123,7 +123,7 @@ class scale:
         print("SRAM IFMAP: \t" + str(self.isram_min))
         print("SRAM Filter: \t" + str(self.fsram_min))
         print("SRAM OFMAP: \t" + str(self.osram_min))
-        if self.dataflow == 'gcn':
+        if self.dataflow == 'gcn' || self.dataflow == 'gcn2':
             print("SRAM ADJMAP: \t" + str(self.asram_min))
         print("CSV file path: \t" + self.topology_file)
         print("Dataflow: \t" + df_string)

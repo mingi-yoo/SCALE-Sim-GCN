@@ -152,6 +152,92 @@ def run_net( ifmap_sram_size=1,
             line = name + ",\t" + clk +",\t" + util_str +",\n"
             cycl.write(line)
 
+    elif data_flow == 'gcn2':
+        first = True
+        
+        for row in param_file:
+            if first:
+                first = False
+                continue
+                
+            elems = row.strip().split(',')
+            #print(len(elems))
+            
+            # Do not continue if incomplete line
+            if len(elems) < 7:
+                continue
+
+            name = elems[0]
+            print("")
+            print("Commencing run for " + name)
+
+            ifmap_h = int(elems[1])
+            ifmap_w = int(elems[2])
+
+            filt_h = int(elems[3])
+            filt_w = int(elems[4])
+
+            num_nodes = int(elems[5])
+            num_edges = int(elems[6])
+            
+            ifmap_base  = offset_list[0]
+            filter_base = offset_list[1]
+            ofmap_base  = offset_list[2]
+
+            bw_log = str(ifmap_sram_size) +",\t" + str(filter_sram_size) + ",\t" + str(ofmap_sram_size) + ",\t" + name + ",\t"
+            max_bw_log = bw_log
+            detailed_log = name + ",\t"
+
+            bw_str, detailed_str, util, clk =  \
+                tg.gen_all_traces(  array_h = array_h,
+                                    array_w = array_w,
+                                    ifmap_h = ifmap_h,
+                                    ifmap_w = ifmap_w,
+                                    filt_h = filt_h,
+                                    filt_w = filt_w,
+                                    num_nodes = num_nodes,
+                                    num_edges = num_edges,
+                                    data_flow = data_flow,
+                                    word_size_bytes = 1,
+                                    filter_sram_size = filter_sram_size,
+                                    ifmap_sram_size = ifmap_sram_size,
+                                    ofmap_sram_size = ofmap_sram_size,
+                                    filt_base = filter_base,
+                                    ifmap_base = ifmap_base,
+                                    ofmap_base = ofmap_base,
+                                    sram_read_trace_file= net_name + "_" + name + "_sram_read.csv",
+                                    sram_write_trace_file= net_name + "_" + name + "_sram_write.csv",
+                                    dram_filter_trace_file=net_name + "_" + name + "_dram_filter_read.csv",
+                                    dram_ifmap_trace_file= net_name + "_" + name + "_dram_ifmap_read.csv",
+                                    dram_ofmap_trace_file= net_name + "_" + name + "_dram_ofmap_write.csv"
+                                )
+
+            bw_log += bw_str
+            bw.write(bw_log + "\n")
+
+            detailed_log += detailed_str
+            detail.write(detailed_log + "\n")
+
+            max_bw_log += tg.gen_max_bw_numbers(
+                                    sram_read_trace_file = net_name + "_" + name + "_sram_read.csv",
+                                    sram_write_trace_file= net_name + "_" + name + "_sram_write.csv",
+                                    dram_filter_trace_file=net_name + "_" + name + "_dram_filter_read.csv",
+                                    dram_ifmap_trace_file= net_name + "_" + name + "_dram_ifmap_read.csv",
+                                    dram_ofmap_trace_file= net_name + "_" + name + "_dram_ofmap_write.csv",
+                                    data_flow = data_flow
+                                    )
+
+            maxbw.write(max_bw_log + "\n")
+
+            # Anand: This is not needed, sram_traffic() returns this
+            #last_line = subprocess.check_output(["tail","-1", net_name + "_" + name + "_sram_write.csv"] )
+            #clk = str(last_line).split(',')[0]
+            #clk = str(clk).split("'")[1]
+
+            util_str = str(util)
+            line = name + ",\t" + clk +",\t" + util_str +",\n"
+            cycl.write(line)
+
     else:
         first = True
         

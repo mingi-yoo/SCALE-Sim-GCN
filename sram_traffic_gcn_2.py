@@ -8,7 +8,7 @@ def sram_traffic(
         dimension_cols=4,
         ifmap_h=7, ifmap_w=5,
         filt_h=5, filt_w=5,
-        adjacency_h = 7, adjacency_w = 7,
+        num_nodes = 20, num_edges = 4,
         num_channels=1,
         num_filt=1,
         adjacency_base=3000000, ofmap_base=2000000, filt_base=1000000, ifmap_base=0,
@@ -25,7 +25,7 @@ def sram_traffic(
 
     cycles = 0
 
-    read_cycles, util1 = gen_read_trace(
+    read_cycles, util = gen_read_trace(
                             cycle = cycles,
                             dim_rows = dimension_rows,
                             dim_cols = dimension_cols,
@@ -52,41 +52,19 @@ def sram_traffic(
                     sram_write_trace_file = sram_write_trace_file
                     )
 
-    ofmap_h = adjacency_h
-    ofmap_w = filt_w;
-
     cycles = max(read_cycles, write_cycles)
 
-    read_cycles, util2 = gen_read_trace(
-                            cycle = cycles,
-                            dim_rows = dimension_rows,
-                            dim_cols = dimension_cols,
-                            num_v_fold = int(num_v_fold),
-                            num_h_fold = int(num_h_fold),
-                            ifmap_h = adjacency_h, ifmap_w= adjacency_w,
-                            filt_h= ifmap_h, filt_w= filt_w,
-                            num_channels= 1, 
-                            ofmap_h= ofmap_h, ofmap_w= ofmap_w,
-                            filt_base= ofmap_base, ifmap_base= adjacency_base,
-                            sram_read_trace_file= sram_read_trace_file
-                            )
-
-    write_cycles = gen_write_trace(
+    relation_cycles = gen_relation_trace(
                     cycle = cycles,
                     dim_rows = dimension_rows,
                     dim_cols = dimension_cols,
-                    #num_v_fold = int(num_v_fold),
-                    #num_h_fold = int(num_h_fold),
-                    ofmap_h = ofmap_h, ofmap_w = ofmap_w,
-                    num_filters = filt_w,
-                    ofmap_base = ofmap_base,
-                    conv_window_size = ifmap_h,
-                    sram_write_trace_file = sram_write_trace_file
-                    )
+                    ifmap_w = filt_w,
+                    num_nodes = num_nodes, num_edges = num_edges,
+                    adjacency_base = adjacency_base, ifmap_base = ifmap_base)
 
-    cycles = max(read_cycles, write_cycles)
+    cycles += relation_cycles
     str_cycles = str(cycles)
-    return(str_cycles, util1, util2)
+    return(str_cycles, util)
 # End of sram_traffic()
 
 def gen_read_trace(
@@ -408,6 +386,20 @@ def gen_write_trace(
     return(local_cycle + cycle)
 # End of gen_write_trace()
 
+def gen_relation_trace(
+        cycle = 0,
+        dim_rows = 4,
+        dim_cols = 4,
+        ifmap_w = 5,
+        num_nodes = 20, num_edges = 5,
+        adjacency_base = 3000000, ifmap_base = 0
+):
+    local_cycle = 0
+
+    for i in range(num_v_fold):
+        local_cycle += num_nodes * num_edges + dim_rows
+
+    return(local_cycle + cycle)
 
 if __name__ == "__main__":
    sram_traffic(

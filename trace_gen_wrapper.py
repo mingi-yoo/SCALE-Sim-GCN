@@ -4,6 +4,7 @@ import sram_traffic_os as sram
 import sram_traffic_ws as sram_ws
 import sram_traffic_is as sram_is
 import sram_traffic_gcn as sram_gcn
+import sram_traffic_gcn_2 as sram_gcn_2
 
 def gen_all_traces(
         array_h = 4,
@@ -18,7 +19,7 @@ def gen_all_traces(
 
         word_size_bytes = 1,
         filter_sram_size = 64, ifmap_sram_size= 64, ofmap_sram_size = 64, adjacency_sram_size = 64,
-
+        num_nodes =  200, num_edges = 10,
         filt_base = 1000000, ifmap_base=0, ofmap_base = 2000000, adjacency_base = 3000000,
         sram_read_trace_file = "sram_read.csv",
         sram_write_trace_file = "sram_write.csv",
@@ -74,13 +75,27 @@ def gen_all_traces(
                 sram_write_trace_file = sram_write_trace_file
             )
     elif data_flow == 'gcn':
-        sram_cycles, util = \
+        sram_cycles, util1, util2 = \
             sram_gcn.sram_traffic(
                 dimension_rows = array_h,
                 dimension_cols = array_w,
                 ifmap_h = ifmap_h, ifmap_w = ifmap_w,
                 filt_h = filt_h, filt_w = filt_w,
                 adjacency_h = adjacency_h, adjacency_w = adjacency_w,
+                num_channels = 1,
+                num_filt = 1,
+                adjacency_base = adjacency_base, ofmap_base = ofmap_base, filt_base = filt_base, ifmap_base = ifmap_base,
+                sram_read_trace_file = sram_read_trace_file,
+                sram_write_trace_file = sram_write_trace_file
+            )
+    elif data_flow == 'gcn2':
+        sram_cycles, util = \
+            sram_gcn_2.sram_traffic(
+                dimension_rows = array_h,
+                dimension_cols = array_w,
+                ifmap_h = ifmap_h, ifmap_w = ifmap_w,
+                filt_h = filt_h, filt_w = filt_w,
+                num_nodes = num_nodes, num_edges = num_edges,
                 num_channels = 1,
                 num_filt = 1,
                 adjacency_base = adjacency_base, ofmap_base = ofmap_base, filt_base = filt_base, ifmap_base = ifmap_base,
@@ -112,7 +127,9 @@ def gen_all_traces(
         dram_write_trace_file= dram_ofmap_trace_file
     )
 
-    dram.dram_trace_read_v2(
+    if data_flow == 'gcn':
+        
+        dram.dram_trace_read_v2(
         sram_sz=adjacency_sram_size,
         word_sz_bytes=word_size_bytes,
         min_addr=ofmap_base, max_addr=adjacency_base,
@@ -120,7 +137,9 @@ def gen_all_traces(
         dram_trace_file=dram_adjacency_trace_file
         )
 
-    print("Average utilization : \t"  + str(util) + " %")
+        print("Average utilization : \t IFMAP x WEIGHT(X1) - " + str(util1) + " %, ADJACENCYMAP * X1 - " + str(util2) + " %")
+    else:
+        print("Average utilization : \t"  + str(util) + " %")
     print("Cycles for compute  : \t"  + str(sram_cycles) + " cycles")
     if data_flow == 'gcn':
         bw_numbers, detailed_log  = gen_bw_numbers(dram_ifmap_trace_file, dram_filter_trace_file,

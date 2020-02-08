@@ -1,3 +1,2 @@
 Layer name, IFMAP Height, IFMAP Width, Filter Height, Filter Width, Adjacency Height, Adjacency Width,
-Conv1, 256, 224, 224, 15, 256, 256
-Conv2, 128, 96, 96, 7, 128, 128
+Conv1, 10240, 9000, 9000, 15, 10240, 10240
