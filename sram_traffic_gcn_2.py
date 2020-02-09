@@ -399,7 +399,7 @@ def gen_relation_trace(
     local_cycle = 0
 
     for i in range(num_v_fold):
-        local_cycle += num_nodes * num_edges + dim_rows
+        local_cycle += num_nodes * num_edges + dim_rows - 1
 
     return(local_cycle + cycle)
 
