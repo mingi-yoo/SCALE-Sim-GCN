@@ -63,6 +63,7 @@ def sram_traffic(
                     num_nodes = num_nodes, num_edges = num_edges,
                     adjacency_base = adjacency_base, ifmap_base = ifmap_base)
 
+    cycles = relation_cycles
     str_cycles = str(cycles)
     return(str_cycles, util)
 # End of sram_traffic()
